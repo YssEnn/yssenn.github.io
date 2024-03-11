@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+
+
+    <title>
+      
+    Docker - 
+    
+    </title>
+
+
+  <link href="asset/css/style.css" rel="stylesheet" > 
+  <link href="asset/js/xcode.min.css" rel="stylesheet">
+  <script src="asset/js/headroom.js"></script>
+
+  <!-- <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="asset/css/font-awesome.css">
+ -->
+
+  <!-- <script src="asset/highlightjs/highlight.pack.js"></script> -->
+  <!-- <link href="asset/highlightjs/styles/solarized_light.css" media="screen, projection" rel="stylesheet" type="text/css"> -->
+  <!-- <script>hljs.initHighlightingOnLoad();</script> -->
+
+
+  </head>
+
+  <!-- 主体开始 -->
+  <!-- <body class="" gtools_scp_screen_capture_injected="true"> -->
+  <!-- 上面为主页白底色版本 -->
+    
+<body class="bg-grey" gtools_scp_screen_capture_injected="true" data-feedly-mini="yes">
+<!-- 上面是主页灰底色版本 -->
+
+<!--[if lt IE 8]>
+<div class="browsehappy" role="dialog">
+    当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/" target="_blank">升级你的浏览器</a>。
+</div>
+<![endif]-->
+<!-- 头部位置 -->
+
+<header id="header" class="header bg-white headroom">
+  <div class="navbar-container"> 
+    <a href="index.html" class="navbar-logo"><img src="asset/img/K-logo.png"> </a>
+    <div class="navbar-menu"> 
+
+        
+        <a href="index.html">Home</a>
+        
+        <a href="archives.html">Archives</a>
+        
+        
+    </div> 
+    <!-- 搜索框体 -->
+    <!--  <div class="navbar-search" onclick="">
+        <span class="icon-search"></span>
+        <form id="search" method="post" action="/" role="search">
+          <span class="search-box">
+            <input type="text" id="input" class="input" name="s" required="true" placeholder="Search..." maxlength="30" autocomplete="off">
+          </span>
+        </form>
+    </div> -->
+
+    <div class="navbar-mobile-menu" onclick=""> 
+      <span class="icon-menu cross"><span class="middle"></span></span> 
+        <ul> 
+          
+          <li>
+          <a href="index.html">Home</a>
+          </li>
+          
+          <li>
+          <a href="archives.html">Archives</a>
+          </li>
+          
+        </ul> 
+    </div> 
+  </div> 
+</header>
+<!-- 头部结束 --> <!-- post 开始 -->
+<div class="bg-white" gtools_scp_screen_capture_injected="true" data-feedly-mini="yes">
+	<article class="main-content page-page" style="max-width: 700px;padding: 110px 25px 20px" itemscope="" itemtype="http://schema.org/Article">
+		<div class="post-header">
+			<!-- title -->
+			<div class="post-header">
+				<h1 class="post-title itemprop="name headline">Docker</h1>	
+				<div class="post-data">
+					<time datetime="2023-05-04T15:17:35+08:00" pubdate data-updated="true">2023/05/04 15:17 下午</time>
+				</div>
+			</div>
+		</div>
+	<div id="post-content" class="post-content" itemprop="articleBody"> 
+		<p class="post-tags"> 
+		
+		</p>
+	<!-- 正文 -->
+		<p>
+		<h2><a id="%E6%B8%85%E7%90%86docker%E6%97%A5%E5%BF%97" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>清理docker日志</h2>
+<p><a href="https://blog.csdn.net/yjk13703623757/article/details/80283729">https://blog.csdn.net/yjk13703623757/article/details/80283729</a></p>
+<p>cat /dev/null &gt; *-json.log</p>
+<h2><a id="docker%E5%BC%80%E6%94%BE2375%E7%AB%AF%E5%8F%A3%EF%BC%8C%E5%B9%B6%E6%B7%BB%E5%8A%A0%E5%AE%89%E5%85%A8%E4%BC%A0%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE%EF%BC%88tls%EF%BC%89%E5%92%8Cca%E8%AE%A4%E8%AF%81%E5%88%B6%E4%BD%9C%E8%AF%81%E4%B9%A6%E5%8F%8A%E7%A7%98%E9%92%A5" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>docker开放2375端口，并添加安全传输层协议（TLS）和CA认证制作证书及秘钥</h2>
+<p>我们需要使用OpenSSL制作CA机构证书、服务端证书和客户端证书，以下操作均在安装Docker的<a href="https://so.csdn.net/so/search?from=pc_blog_highlight&amp;q=Linux">Linux</a>服务器上进行。</p>
+<pre><code class="language-shell">1、创建一个目录用于存储生成的证书和秘钥
+mkdir /docker-ca &amp;&amp; cd /docker-ca
+
+2、创建CA证书私钥，期间需要输入两次密码，生成文件为ca-key.pem
+openssl genrsa -aes256 -out ca-key.pem 4096
+
+3、根据私钥创建CA证书，期间需要输入上一步设置的私钥密码，然后依次输入国家是 CN，省例如是Guangdong、市Shenzhen、组织名称、组织单位、姓名或服务器名、邮件地址，都可以随意填写，生成文件为ca.pem
+openssl req -new -x509 -days 365 -key ca-key.pem -sha256 -out ca.pem
+
+
+4、创建服务端私钥，生成文件为server-key.pem
+openssl genrsa -out server-key.pem 4096
+
+
+5、创建服务端证书签名请求文件，用于CA证书给服务端证书签名。IP需要换成自己服务器的IP地址，或者域名都可以。生成文件server.csr
+openssl req -subj &quot;/CN=82.157.162.43&quot; -sha256 -new -key server-key.pem -out server.csr
+
+6、配置白名单，用多个用逗号隔开，例如： IP:192.168.3.171,IP:0.0.0.0，这里需要注意，虽然0.0.0.0可以匹配任意，但是仍然需要配置你的服务器IP，如果省略会造成错误
+echo subjectAltName = IP:82.157.162.43,IP:0.0.0.0 &gt;&gt; extfile.cnf
+
+7、将Docker守护程序密钥的扩展使用属性设置为仅用于服务器身份验证
+echo extendedKeyUsage = serverAuth &gt;&gt; extfile.cnf
+
+8、创建CA证书签名好的服务端证书，期间需要输入CA证书私钥密码，生成文件为server-cert.pem
+openssl x509 -req -days 365 -sha256 -in server.csr -CA ca.pem -CAkey ca-key.pem \-CAcreateserial -out server-cert.pem -extfile extfile.cnf
+
+9、创建客户端私钥，生成文件为key.pem
+openssl genrsa -out key.pem 4096
+
+10、创建客户端证书签名请求文件，用于CA证书给客户证书签名，生成文件client.csr
+openssl req -subj '/CN=client' -new -key key.pem -out client.csr
+
+11、要使密钥适合客户端身份验证，请创建扩展配置文件
+echo extendedKeyUsage = clientAuth &gt;&gt; extfile.cnf
+
+12、创建CA证书签名好的客户端证书，期间需要输入CA证书私钥密码，生成文件为cert.pem
+openssl x509 -req -days 365 -sha256 -in client.csr -CA ca.pem -CAkey ca-key.pem \-CAcreateserial -out cert.pem -extfile extfile.cnf
+
+13、删除不需要的文件，两个证书签名请求
+rm -v client.csr server.csr
+
+14、修改证书为只读权限保证证书安全
+chmod -v 0400 ca-key.pem key.pem server-key.pem
+
+chmod -v 0444 ca.pem server-cert.pem cert.pem
+
+15、归集服务器证书
+cp server-*.pem  /etc/docker/ &amp;&amp; cp ca.pem /etc/docker/
+
+
+最终生成文件如下，有了它们我们就可以进行基于TLS的安全访问了
+
+- ca.pem CA证书
+- ca-key.pem CA证书私钥
+- server-cert.pem 服务端证书
+- server-key.pem 服务端证书私钥
+- cert.pem 客户端证书
+- key.pem 客户端证书私钥
+
+
+</code></pre>
+<h4><a id="%E9%85%8D%E7%BD%AEdocker%E6%94%AF%E6%8C%81tls" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>配置Docker支持TLS</h4>
+<pre><code class="language-shell">修改docker.service文件
+vi /usr/lib/systemd/system/docker.service
+
+
+修改以ExecStart开头的配置，开启TLS认证，并配置好CA证书、服务端证书和服务端私钥
+ExecStart=/usr/bin/dockerd --tlsverify --tlscacert=/etc/docker/ca.pem --tlscert=/etc/docker/server-cert.pem --tlskey=/etc/docker/server-key.pem -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
+
+
+重新加载daemon
+systemctl daemon-reload &amp;&amp; systemctl restart docker
+
+重启docker
+service docker restart
+
+
+</code></pre>
+<h4><a id="%E9%85%8D%E7%BD%AEidea" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>配置idea</h4>
+<p>保存相关客户端的pem文件到本地<br />
+<img src="media/16831846551786/16831850712820.png" alt="image.png" /><br />
+<img src="media/16831846551786/16831850712862.png" alt="image.png" /></p>
+<h2><a id="%E6%9F%A5%E7%9C%8B%E8%AF%A6%E6%83%85" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>查看详情</h2>
+<p>docker inspect</p>
+<h2><a id="%E6%9F%A5%E7%9C%8B%E5%AD%98%E5%82%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>查看存储</h2>
+<p><code>docker system df</code><br />
+<code>docker system df -v</code></p>
+<h2><a id="%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>安装</h2>
+<pre><code class="language-plain_text">tar zxvf docker-19.03.9.tgz
+用yum源安装 docker
+yum -y install docker
+-y表示不询问安装，直到安装成功，安装完后再次查看安装列表
+yum list installed | grep docker   
+
+启动docker 
+systemctl start docker  
+查看docker服务状态 systemctl status docker      
+以上说明docker安装成功 
+</code></pre>
+<h2><a id="%E5%8D%B8%E8%BD%BD" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>卸载</h2>
+<pre><code class="language-plain_text">yum remove docker -y
+yum remove docker-client -y
+yum remove docker-client-latest -y
+yum remove docker-common -y
+yum remove docker-latest -y
+yum remove docker-latest-logrotate -y
+yum remove docker-logrotate -y
+yum remove docker-engine -y
+</code></pre>
+<pre><code class="language-plain_text">systemctl stop docker
+
+rpm -qa  | grep docker
+
+yum -y remove 
+
+rm -rf /var/lib/docker
+</code></pre>
+<h2><a id="%E8%AE%BE%E7%BD%AEdocker%E7%9B%AE%E5%BD%95%E6%96%B0%E7%89%88%E6%9C%AC%EF%BC%88-1-13%E4%BB%A5%E4%B8%8A%EF%BC%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>设置docker目录-新版本（1.13以上）</h2>
+<pre><code class="language-plain_text">1.查看默认目录
+ sudo docker info | grep &quot;Docker Root Dir&quot;
+2.停止docker服务
+systemctl stop docker
+3.docker的配置文件路径在/etc/docker/daemon.json，增加一个key和value，
+指定docker的路径：&quot;data-root&quot;: &quot;/new-path/docker&quot;
+vim /etc/docker/daemon.json 
+{
+&quot;data-root&quot;: &quot;/home/project/docker&quot;
+}
+
+4.启动docker服务
+systemctl start docker
+ 
+执行docker info，查看docker信息如下：
+[root@localhost ~]# docker info
+</code></pre>
+<h2><a id="%E8%AE%BE%E7%BD%AEdocker%E7%9B%AE%E5%BD%95%E8%80%81%E7%89%88%E6%9C%AC%EF%BC%88-1-13%E4%BB%A5%E4%B8%8B%EF%BC%88%E5%90%AB%EF%BC%89%EF%BC%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>设置docker目录-老版本（1.13以下（含））</h2>
+<pre><code class="language-plain_text">1.查看默认目录
+ sudo docker info | grep &quot;Docker Root Dir&quot;
+2.停止docker服务
+systemctl stop docker
+3.docker的配置文件路径在/etc/docker/daemon.json，增加一个key和value，
+指定docker的路径：&quot;graph&quot;: &quot;/new-path/docker&quot;
+vim /etc/docker/daemon.json 
+{
+&quot;graph&quot;: &quot;/mnt/docker&quot;
+}
+
+4.启动docker服务
+systemctl start docker
+ 
+执行docker info，查看docker信息如下：
+[root@localhost ~]# docker info
+
+</code></pre>
+<h2><a id="%E5%A6%82%E6%9E%9C%E6%98%AF%E5%B7%B2%E6%9C%89%E8%BF%90%E8%A1%8C%E7%9A%84%E9%9C%80%E8%A6%81%E6%9B%B4%E6%94%B9" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>如果是已有运行的需要更改</h2>
+<pre><code class="language-plain_text">配置 /etc/systemd/system/docker.service.d/devicemapper.conf
+        查看/etc/systemd/system/docker.service.d目录及devicemapper.conf是否存在。如果不存在，就新建。
+**     **  [Service]
+        ExecStart=/var/lib/docker  --graph=/home/docker/lib/docker
+
+systemctl disable docker
+systemctl enable docker
+systemctl daemon-reload
+systemctl start docker
+</code></pre>
+<h2><a id="docker%E5%AE%B9%E5%99%A8%E5%90%AF%E5%8A%A8%E6%97%B6%E6%8A%A5%E9%94%99%EF%BC%9Acontainer-init-caused%E2%80%9C-write-procselfattrkeycreate-permission-denied%E2%80%9C%E2%80%9C-unknown" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Docker容器启动时报错：container init caused “write /proc/self/attr/keycreate: permission denied““: unknown</h2>
+<pre><code class="language-basic">2.1 永久更改
+需要重启服务器，慎重选用：
+
+编辑config文件：vi /etc/selinux/config
+将SELINUX=enforcing改为SELINUX=disabled
+重启服务器
+启动docker容器docker start container-id
+2.2 临时更改
+输入setenforce 0
+启动docker容器docker start container-id
+</code></pre>
+<h2><a id="docker%E5%AE%B9%E5%99%A8%E4%B8%AD%E8%BF%90%E8%A1%8Cls%EF%BC%8C%E5%87%BA%E7%8E%B0ls-can-t-open-permission-denied%E9%94%99%E8%AF%AF" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Docker容器中运行ls，出现ls: can't open '.': Permission denied错误</h2>
+<p>在docker主机关闭selinux功能:</p>
+<pre><code class="language-plain_text">形成原因：
+
+centos7.x及以上系统默认的selinux进程会iu禁用部分权限，可使用以下方式解决：
+
+（selinux相关内容可参考：https://blog.csdn.net/mjlfto/article/details/80547974）
+
+1. 在docker主机关闭selinux功能:
+
+	setenforce 0  //setenforce [0|1]
+              //0宽容模式 1强制模式  默认强制模式（Enforcing）
+2. 在docker run 运行容器时添加特权参数： --privileged=true
+
+3. 更改挂载目录的selinux安全规则文本：
+
+	chcon -Rt svirt_sandbox_file_t /home/mount
+</code></pre>
+<h2><a id="%E5%AE%B9%E5%99%A8%E5%86%85%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>容器内安装</h2>
+<pre><code class="language-plain_text">apt-get install vim
+apt-get update
+apt-get install vim
+
+docker pull 镜像:tag                ##拉去默认仓库tag版本号的镜像
+docker images                       ##查询本地仓库的所有镜像
+docker rmi 镜像id                   ##删除镜像
+docker tag 镜像id 镜像:TAG          ##重命名镜像
+docker ps                           ##查询本地容器
+docker ps -a                        ##查询本地所有运行的容器
+docker export 容器id &gt; x:/xx/xx.tar ##导出容器快照
+docker import &lt; x:/xx/xx.tar  镜像名称:tag     ##导入容器快照
+docker save 镜像id &gt; x:/xx/xx.tar  镜像名称:tag	  ##导出镜像
+docker load &lt; x:/xx/xx.tar          ##导入镜像
+docker cp 拷贝文件路径 容器id：拷贝到容器里面对应的路径    ##宿主机拷贝文件到容器
+docker cp 容器id：要拷贝的文件在容器里面的路径       要拷贝到宿主机的相应路径    ##容器拷贝文件到宿主机
+docker commit -m='注释'  -a='作者' 容器ID  镜像名称:tag
+
+
+docker save 镜像id -o x:/xx/xx.tar
+docker load -i x:/xx/xx.tar
+
+
+
+docker commit -m='注释'  -a='作者' 容器ID  镜像名称:tag
+docker save 镜像id &gt; x:/xx/xx.tar  镜像名称:tag   ##导出镜像
+docker load &lt; x:/xx/xx.tar          ##导入镜像
+docker run -p 5000:8080 --name 容器名称 -d -t 镜像名称
+
+
+
+docker save postgis:9.6-2.5 &gt; postgis.tar  postgis:9.6-2.5   ##导出镜像
+docker save nginx:1.23.1 &gt; nginx.tar  nginx:1.23.1
+docker save docker.io/tomcat:8-jdk8-corretto &gt; tomcat.tar  tomcat:8-jdk8-corretto
+
+docker commit  geoserver_gis_hq_server  geoserver_gis_hq:1.1
+
+docker save geoserver_gis_hq:1.1 &gt; geoserver_gis_hq.tar 
+
+docker save nginx:1.23.1 &gt; nginx.tar 
+
+docker commit -m='centos7 python3.7.3'  -a='yss' 860b91886ce4  yssenn/centos7_python:3.7.3
+
+docker import &lt; tgc.tar tgc:1.0
+
+docker build -t book-server:1.0 .
+
+docker build -t postgis:9.6-2.5 .
+</code></pre>
+<h2><a id="docker%E5%AE%B9%E5%99%A8%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE%E5%AE%BF%E4%B8%BB%E6%9C%BA-no-route-to-host" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>docker容器无法访问宿主机-No route to host</h2>
+<h3><a id="%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E5%85%B3%E9%97%AD%E9%98%B2%E7%81%AB%E5%A2%99" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>方法一：关闭防火墙</h3>
+<p>centos关闭防火墙的操作为</p>
+<pre><code class="language-plain_text">systemctl stop firewalld 
+</code></pre>
+<h3><a id="%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E5%9C%A8%E9%98%B2%E7%81%AB%E5%A2%99%E4%B8%8A%E5%BC%80%E5%8F%91%E6%8C%87%E5%AE%9A%E7%AB%AF%E5%8F%A3" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>方法二： 在防火墙上开发指定端口</h3>
+<pre><code class="language-plain_text">firewall-cmd --zone=public --add-port=2181/tcp --permanent 
+firewall-cmd --reload
+
+#如果vim提示找不到，则执行上安装vim 
+vim /etc/sysctl.conf 
+#配置转发 net.ipv4.ip_forward=1 
+#重启服务，让配置生效 systemctl restart network 
+#查看是否成功,如果返回为“net.ipv4.ip_forward = 1”则表示成功 
+sysctl net.ipv4.ip_forward 
+#重启docker服务 service docker restart
+</code></pre>
+<h2><a id="java-jdk" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>java JDK</h2>
+<pre><code class="language-plain_text">docker pull openjdk:8
+docker run -d  -t -p 8001:8001 -v /mnt/poct/java8:/mnt --name java8 openjdk:8
+</code></pre>
+<h2><a id="oracle" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>oracle</h2>
+<p><a href="https://blog.csdn.net/weixin_43583693/article/details/90243856">https://blog.csdn.net/weixin_43583693/article/details/90243856</a></p>
+<pre><code class="language-plain_text">docker pull registry.cn-hangzhou.aliyuncs.com/helowin/oracle_11g
+
+docker run -d -p 1521:1521 --name yss_oracle11 registry.cn-hangzhou.aliyuncs.com/helowin/oracle_11g
+
+docker run -d -p 1521:1521 --name oracle11 registry.cn-hangzhou.aliyuncs.com/helowin/oracle_11g
+
+1、进入oracle的命令环境中。
+docker exec -it yss_oracle11 bash
+2、切换到oracle数据库的root 用户下
+su root
+密码：helowin
+3、编辑profile文件配置ORACLE环境变量（vi /etc/profile）
+export ORACLE_HOME=/home/oracle/app/oracle/product/11.2.0/dbhome_2
+export ORACLE_SID=helowin
+export PATH=$ORACLE_HOME/bin:PATH
+</code></pre>
+<p>在最后加上<br />
+<img src="media/16831846551786/16831850712940.png" alt="image.png" />        </p>
+<pre><code class="language-plain_text">export ORACLE_HOME=/home/oracle/app/oracle/product/11/dbhome
+export ORACLE_SID=helowin
+export PATH=$ORACLE_HOME/bin:PATH
+</code></pre>
+<p>4、创建软连接</p>
+<pre><code class="language-plain_text">ln -s $ORACLE_HOME/bin/sqlplus /usr/bin
+</code></pre>
+<p>5、切换到oracle 用户</p>
+<pre><code class="language-plain_text">su - oracle
+</code></pre>
+<p>6、登录sqlplus–修改sys、system用户密码–创建用户</p>
+<pre><code class="language-plain_text">sqlplus /nolog
+conn sys/ as sysdba;
+密码：helowin
+修改密码：
+alter user system identified by system;
+alter user sys identified by sys;
+ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED;
+创建用户
+create user test identified by test;
+并给用户赋予权限
+grant connect,resource,dba to test;
+![](media/16831846551786/16831850712979.png)
+过程中出现的报错需要输入以下内容：
+输入：alter database mount;
+输入 ：alter database open;
+输入sql语句出现SP2-0640: Not connected
+conn sys/ as sysdba;
+</code></pre>
+<p><img src="media/16831846551786/16831850713018.png" alt="image.png" /></p>
+<p><img src="media/16831846551786/16831850713056.png" alt="image.png" /><br />
+<img src="media/16831846551786/16831850713106.png" alt="image.png" /></p>
+<pre><code class="language-plain_text">create user test identified by test;
+并给用户赋予权限
+grant connect,resource,dba to test;
+grant create session to
+</code></pre>
+<h3><a id="%E9%97%AE%E9%A2%98%EF%BC%9A99999-29516-ora-29516-aurora%E6%96%AD%E8%A8%80%E5%A4%B1%E8%B4%A5-assertion-failure-at-joez-c-3311" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>问题：[99999][29516] ORA-29516: Aurora 断言失败: Assertion failure at joez.c:3311</h3>
+<p><code>Bulk load of method java/lang/Object.&lt;init&gt; failed; insufficient shm-object space</code><br />
+<a href="https://www.freesion.com/article/6651164397/">https://www.freesion.com/article/6651164397/</a><br />
+执行sql<br />
+<code>alter system set JAVA_JIT_ENABLED= FALSE scope = both;</code></p>
+<h2><a id="postgresql" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>postgresql</h2>
+<pre><code class="language-plain_text">docker pull postgis/postgis:9.6-2.5
+docker run -p 5432:5432 --name yss_postgres -e POSTGRES_PASSWORD=123.com -d -t postgis/postgis:9.6-2.5 /bin/bash
+
+docker run -p 54321:5432 --name yss_postgres2 -e POSTGRES_PASSWORD=123.com -d -t postgis/postgis:9.6-2.5
+
+docker run -p 54322:5432 --name yss_postgres3 -e POSTGRES_PASSWORD=123.com -d -t postgis/postgis:13-master
+
+docker run -p 54323:5432 --name yss_postgres4 -e POSTGRES_PASSWORD=123.com -d -t postgis/postgis:9.6-3.1 /bin/bash
+
+docker run -p 54321:5432 --name postgres2 -e POSTGRES_PASSWORD=pg#cs@db.com -d -t postgis/postgis:9.6-2.5
+
+docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=pg#gis@db.com -d -t postgis/postgis:9.6-2.5
+
+
+docker run -p 54321:5432 --name postgres -e POSTGRES_PASSWORD=123.com -d -t postgis/postgis:9.6-2.5
+
+
+
+docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=pg#gis@lkd123.com -d -t postgis/postgis:9.6-2.5 
+
+docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=pg#jzpt@123.com -d -t postgis/postgis:9.6-2.5
+
+
+
+
+docker run -p 5432:5432 -v /data/pgdata:/var/lib/postgresql/data --name postgres -e POSTGRES_PASSWORD=pg#gis@lkd123.com -d -t postgis/postgis:9.6-2.5
+
+docker run -p 5432:5432 -v /mnt/pgdata:/var/lib/postgresql/data --name postgres -e POSTGRES_PASSWORD=pg#jzpt@123.com -d -t postgis:9.6-2.5
+
+docker run -p 5432:5432 -v /opt/pgdata:/var/lib/postgresql/data --name postgres -e POSTGRES_PASSWORD=pg#geo@123.com -d -t postgis:9.6-2.5
+
+docker run -p 8203:5432 -v /home/applicationserver/gis/pgdata:/var/lib/postgresql/data --name postgres -e POSTGRES_PASSWORD=pg#gis@123.com -d -t postgis:9.6-2.5
+
+docker run -p 5432:5432 -v /opt/data/pgdata:/var/lib/postgresql/data --name postgres -e POSTGRES_PASSWORD=123.com -d -t postgis_zh:9.6-2.5
+
+docker run -p 54321:5432 --name postgres2 -e POSTGRES_PASSWORD=pg#cs@db.com -d -t postgis/postgis:9.6-2.5
+</code></pre>
+<h3><a id="%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>支持中文</h3>
+<pre><code class="language-bash">FROM postgis/postgis:9.6-2.5
+RUN localedef -i zh_CN -c -f UTF-8 -A /usr/share/locale/locale.alias zh_CN.UTF-8
+ENV LANG zh_CN.utf8
+docker build -t postgis_zh:9.6-2.5 .
+docker run -p 54321:5432 --name postgres_zh_cn -e POSTGRES_PASSWORD=123.com -d -t postgis:9.6-2.5
+docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=123.com -d -t postgis_zh:9.6-2.5
+</code></pre>
+<h3><a id="arm" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>arm</h3>
+<p>docker pull duvel/postgis:12-2.5</p>
+<h2><a id="redis" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>redis</h2>
+<pre><code class="language-bash">docker pull redis
+
+docker run -p 6379:6379 --name yss_redis -d -t redis
+
+docker run -p 6379:6379 --name redis -d -t redis
+
+docker run -p 6381:6379 --name redis_drone -d -t redis --requirepass 123.com
+docker run -p 6379:6379 --name redis -d -t redis --requirepass 123.com
+</code></pre>
+<h2><a id="sqlserver" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>sqlserver</h2>
+<p><a href="https://www.cnblogs.com/yyfh/p/13413105.html">https://www.cnblogs.com/yyfh/p/13413105.html</a><br />
+<a href="https://hub.docker.com/_/microsoft-mssql-server?tab=description">https://hub.docker.com/_/microsoft-mssql-server?tab=description</a></p>
+<pre><code class="language-bash">docker pull microsoft/mssql-server-linux:2017-latest
+
+docker run -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=123.com' -p 1433:1433 --name yss_sqlserver -d microsoft/mssql-server-linux:2017-latest
+
+
+
+sudo docker pull mcr.microsoft.com/mssql/server:2019-latest
+
+docker run -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=Yss56542..' -p 1433:1433 --name yss_sqlserver -d mcr.microsoft.com/mssql/server:2019-latest
+
+
+docker run -e &quot;ACCEPT_EULA=Y&quot; -e &quot;MSSQL_SA_PASSWORD=SA#geo@123.com&quot; -p 1433:1433 --name sqlserver -d mcr.microsoft.com/mssql/server:2017-latest
+
+</code></pre>
+<h2><a id="mysql" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>mysql</h2>
+<p>(先用123.com安装，安装好了再修改)</p>
+<pre><code class="language-bash">docker pull mysql:5.7
+
+docker run -d -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=123.com   mysql:5.7
+
+docker run -d -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=poctdb@#123.com   mysql:5.7
+
+docker run -d -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=123.com  mysql:5.7
+
+docker run -d --name mysql -p 3306:3306 -v /mnt/poct/mysql/data:/var/lib/mysql -v /mnt/poct/mysql/conf:/etc/mysql/conf.d  -e MYSQL_ROOT_PASSWORD=poctdb@#123.com mysql:5.7
+
+docker run -d --name mysql -p 3306:3306 --privileged=true -v /mnt/mysql/data:/var/lib/mysql -v /mnt/mysql/conf:/etc/mysql/conf.d  -e MYSQL_ROOT_PASSWORD=123.com mysql:5.7
+
+</code></pre>
+<h3><a id="%E8%A7%A3%E5%86%B3%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>解决时间问题</h3>
+<pre><code class="language-plain_text">docker cp /usr/share/zoneinfo/Asia/Shanghai mysql:/etc/localtime
+</code></pre>
+<h3><a id="%E8%A7%A3%E5%86%B3%E6%97%A0%E6%B3%95%E8%BF%9E%E6%8E%A5" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>解决无法连接</h3>
+<pre><code class="language-plain_text">yum install vim
+/etc/mysql/conf.d/docker.cnf
+[mysqld]
+skip-host-cache
+skip-name-resolve
+skip-grant-tables
+docker restart mysql
+
+
+mysql -u root -p
+use mysql;
+update user set host='%' where user='root';
+grant all privileges on *.* to 'root'@'%' with grant option;
+flush privileges;
+exit;
+</code></pre>
+<h2><a id="tomcat" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>tomcat</h2>
+<pre><code class="language-bash">JAVA_OPTS=&quot;$JAVA_OPTS -Dfile.encoding=UTF8  -Duser.timezone=GMT+08&quot;
+
+ URIEncoding=&quot;UTF-8&quot; 
+
+
+docker pull tomcat:8-jdk8-corretto
+
+docker run -p 3000:8080 --name ps_server -d -t tomcat:8-jdk8-corretto
+docker run -p 8082:8080 --name ps_server -v /opt/docker-data/ps_server_webapps_dir/:/usr/local/tomcat/webapps/  -d -t tomcat:8-jdk8-corretto
+
+docker save tomcat:8-jdk8-corretto -o tomcat:8-jdk8-corretto.tar
+docker load -i x:/xx/xx.tar
+
+docker run -p 7202:8080 --name tomcat2 -d -t tomcat:8-jdk8-corretto
+
+docker run -p 3000:8080 --name drone_server -d -t tomcat:8-jdk8-corretto
+docker run -p 3000:8080 -p 3001:3001 --name drone_server -d -t tomcat:8-jdk8-corretto
+
+docker run -p 2000:8080 -p 2001:3001 --name drone_server_nd -v /home/drone_nd/webapps_dir/:/usr/local/tomcat/webapps/  -d -t tomcat:8-jdk8-corretto
+
+docker run -p 2020:8080 --name zhyw_server -v /home/zhwy/webapps_dir/:/usr/local/tomcat/webapps/  -d -t tomcat:8-jdk8-corretto
+
+docker run -p 5000:8080 --name city_plan_tomcat -d -t tomcat:8-jdk8-corretto
+
+docker run -p 7000:8080 --name map_server  -v /mnt/map_server_dir/:/mnt/ -d -t tomcat:8-jdk8-corretto 
+
+
+
+docker run -p 8081:8081 --name tomcat_rb -v /mnt/temp/:/mnt/ -d -t tomcat:8-jdk8-corretto
+
+docker run -p 2005:8080 --name dj_drone_tomcat -v /home/tomcat/dj_drone_tomcat/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+
+
+docker run -p 2004:8080 --name nd_tomcat -v /home/tomcat/nd_tomcat/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+
+docker run -p 8080:8080 --name tomcat -v /mnt/poct/tomcat_webapps_dir/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+
+docker run -p 8080:8080 --name tomcat -v /data/tomcat_webapps_dir/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+
+docker run -p 8082:8080 --name xcx_server_v2 -v /data/xcx_server_v2_webapps_dir/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+
+docker run -p 8081:8080 --name tomcat_test -v /mnt/poct/tomcat_webapps_dir_test/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+
+docker run -p 1111:8080 --name ts_tomcat -v /home/ts_tomcat/webapps_dir/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+
+docker run -p 3001:8080 --name hq_tomcat -v /mnt/hq_webapps/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+
+
+docker run -p 5656:8080 --name gaojing_finance -v /home/gaojing/webapps_dir/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+
+docker run -p 8060:8080 --name sny -v /home/sny/webapps/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+
+docker run -p 8061:8080 --name sny_fy -v /home/sny_fy/webapps/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+
+
+docker run -p 8080:8080 --name tomcat -v /mnt/tomcat_webapps/:/usr/local/tomcat/webapps/ -d -t tomcat:8.5
+
+
+docker commit -m='第一个版本'  -a='yss' city_plan_tomcat  city_plan_tomcat:1.0
+
+docker save city_plan_tomcat &gt;  city_plan_tomcat.tar city_plan_tomcat:1.0
+
+docker load &lt; city_plan_tomcat.tar          ##导入镜像
+
+docker run -p 5000:8080 --name city_plan_tomcat -d -t city_plan_tomcat:1.0  
+
+docker run -p 8002:8080 --name tomcat -d -t tomcat:8-jdk8-corretto
+
+docker run -p 5000:8080 --name tomcat_data_server -d -t tomcat:8-jdk8-corretto
+
+docker run -p 8081:8080 --name tomcat8_jn -d -t tomcat:8-jdk8-corretto
+
+docker run -p 8081:8080 --name tomcat8569_jn -d -t tomcat:8.5.69-jdk8
+
+docker run -p 8081:8080 -v /mnt2/data/jiningwrok/:/mnt/jiningwrok/ -v /mnt2/data/webapps_dir/:/usr/local/tomcat/webapps/ --name tomcat8575_jn -d -t tomcat:8.5.75-jdk8
+
+
+docker run -p 3000:8080 --name tgc -v /opt/tomcat_geoserver_css_data/:/mnt/ -d -t tomcat:8-jdk8-corretto
+
+docker run -p 3000:8080 --name tgc -v /opt/tomcat_geoserver_css_data/:/mnt/ -d -t tomcat:8-jdk8-corretto
+docker run -p 7201:8080 -v /mnt2/geoserver_data_map_server/:/mnt/geoserver_data --name geoserver_map_server -d -t tgc_i:latest
+docker run -p 7201:8080 --name geoserver_map_server -d -t tgc_i:latest
+
+docker run -p 8081:8080 --name tjn -d -t tomcat:8.5.69-jdk8
+
+docker run -p 8080:8080 --name tomcat -v /home/project/tomcat_data/:/mnt/tomcat_data -d -t tomcat:8-jdk8-corretto
+
+docker run -p 8081:8080 --name geoserver -v /home/project/geoserver_data/:/mnt/geoserver_data -d -t geoserver_xh:1.0
+
+docker run -p 80:8080 --name geoserver1 -v /home/project/geoserver_data/:/mnt/geoserver_data -d -t geoserver_xh:1.0
+
+docker run -p 55432:8080 --name geoserver -v /home/project/geoserver_data/:/mnt/geoserver_data -d -t geoserver_xh:1.0
+
+docker run -p 443:8080 --name geoserver2 -v /home/project/geoserver_data/:/mnt/geoserver_data -d -t geoserver_xh:1.0
+
+docker run -p 8081:8080 --name geoserver_xh -v /home/project/geoserver_data/:/mnt/geoserver_data -d -t geoserver_xh:1.1
+
+docker run -p 7070:8080 --name tomcat_lc -v /mnt2/tomcat_webapps_dir/:/usr/local/tomcat/webapps/ -d -t tomcat_lc:1.0
+
+docker run -p 1001:8080 --name tomcat_geo -v /mnt/geo/tomcat/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+
+docker run -p 1001:8080 --name tomcat_geo -v /mnt/geo/:/mnt/geo/  -v /mnt/geo/tomcat/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+
+
+docker run -p 9010:8080 --name yb  -v /mnt/yb/:/usr/local/tomcat/webapps/ -d -t tomcat:8-jdk8-corretto
+</code></pre>
+<h3><a id="%E8%A7%A3%E5%86%B3%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>解决时间问题</h3>
+<pre><code class="language-plain_text">docker cp /usr/share/zoneinfo/Asia/Shanghai mysql:/etc/localtime
+</code></pre>
+<h3><a id="arm" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>arm</h3>
+<p>docker pull tomcat:8-jdk8-corretto</p>
+<h2><a id="nginx" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>nginx</h2>
+<pre><code class="language-plain_text">docker pull nginx:latest
+
+docker run -p 7000:80 --name nginx_xh -d -t nginx
+
+docker run -p 80:80 -p 443:443 --name nginx -d -t nginx
+
+docker run -p 80:80 -p 443:443 --name nginx -d -t nginx:1.23.1
+
+
+nginx -t
+
+nginx -s reload 
+
+docker run -p 80:80 --name nginx_xh -d -t nginx
+
+docker run --name yss_c -d -v /Users/yss/:/opt/yss rio -t centos:7  bash
+
+
+mkdir -p /mnt/nginx
+mkdir -p /mnt/nginx/www 
+mkdir -p /mnt/nginx/conf
+mkdir -p /mnt/nginx/logs
+
+docker cp nginx:/etc/nginx/nginx.conf /mnt/nginx/
+docker cp nginx:/etc/nginx/conf.d /mnt/nginx/conf/
+docker cp nginx:/usr/share/nginx/html/ /mnt/nginx/www/
+docker cp nginx:/var/log/nginx/ /mnt/nginx/logs/
+
+
+
+docker stop nginx #停止容器
+docker rm nginx #移除容器
+
+#  这里的路径一定要对应不然会导致无效
+docker run --name nginx -p 80:80 -p 443:443 -v /mnt/nginx/nginx.conf:/etc/nginx/nginx.conf  -v /mnt/nginx/conf/conf.d/:/etc/nginx/conf.d  -v /mnt/nginx/www/html:/usr/share/nginx/html/  -v /mnt/nginx/logs/:/var/log/nginx/ --privileged=true -d nginx:latest
+
+docker run --name nginx -p 9000:9000 -v /mnt/nginx/nginx.conf:/etc/nginx/nginx.conf  -v /mnt/nginx/conf/conf.d/:/etc/nginx/conf.d  -v /mnt/nginx/www/html:/usr/share/nginx/html/  -v /mnt/nginx/logs/:/var/log/nginx/ --privileged=true -d nginx:latest
+
+
+
+```dockerfile
+docker run -p 1000:80 --name nginx_geo -d -t nginx
+
+mkdir nginx
+
+docker cp nginx_geo:/etc/nginx/nginx.conf ./nginx/
+docker cp nginx_geo:/etc/nginx/conf.d ./nginx/conf/
+docker cp nginx_geo:/usr/share/nginx/html/ ./nginx/www/
+docker cp nginx_geo:/var/log/nginx/ ./nginx/logs/
+
+docker run --name nginx_geo -p 1000:80 -v /mnt/geo/nginx/nginx.conf:/etc/nginx/nginx.conf  -v /mnt/geo/nginx/conf/conf.d/:/etc/nginx/conf.d  -v /mnt/geo/nginx/www/html:/usr/share/nginx/html/  -v /mnt/geo/nginx/logs/:/var/log/nginx/ --privileged=true -d nginx
+</code></pre>
+<h2><a id="database-dictionary" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>database-dictionary</h2>
+<pre><code class="language-bash">docker pull 251878350/database-dictionary:v4.4
+docker run -itd -p 9998:9998 --name=database-dictionary 251878350/database-dictionary:v4.4
+</code></pre>
+<p>g</p>
+<pre><code class="language-bash">docker pull geonode/geoserver
+
+docker run -v /mnt/geoserver_data/:/mnt/geoserver_data/ -p 8000:8080 --name geoserver -d -t geonode/geoserver
+
+
+
+docker run -p 8000:8080 --name geoserver -v /opt/geoserver_data/:/mnt/geoserver_data  -d -t kartoza/geoserver
+
+docker run -p 3001:8080 --name tomcat-geoserver -d -t tomcat:8-jdk8-corretto
+
+docker run -p 55432:8080 --name geo -d -t docker.io/yssenn/tomcat-geoserver:2.19.0
+
+
+docker run -p 18081:8080 --name geoserver_gis_hq_server -d -t geoserver_gis_hq:1.0
+
+docker run -p 8081:8080 --name geoserver_gis_hq_server -d -t geoserver_gis_hq:1.1
+
+docker run -v /mnt2/geoserver_webapps_dir/:/usr/local/tomcat/webapps/ -p 8080:8080 --name geoserver_lc -d -t geoserver_lc:1.0
+
+
+docker run -p 8080:8080 --name geoserver_lc -d -t geoserver_lc:1.0
+
+
+docker run -p 6000:8080 --name geoserver_drone -d -t docker.io/yssenn/tomcat-geoserver:2.19.0
+
+docker run -p 8000:8080 --name geoserver --privileged=true -d -t docker.io/yssenn/tomcat-geoserver:2.19.0
+
+docker run -p 8001:8080 --name geoserver_drone --privileged=true -d -t docker.io/yssenn/tomcat-geoserver:2.19.0
+
+
+docker run -p 1002:8080 --name geoserver_geo -v /mnt/geo/geoserver/:/mnt/data --privileged=true -d -t docker.io/yssenn/tomcat-geoserver:2.19.0
+
+docker run -p 1002:8080 --name geoserver_geo -v /mnt/geo:/mnt/geo --privileged=true -d -t geoserver_geo:1.0
+
+docker run -p 8202:8080 --name geoserver_xh -d -t geoserver_xh:230420
+
+docker run -p 8201:8080 --name tomcat_xh -d -t tomcat_xh:230420
+</code></pre>
+<h2><a id="elasticsearch" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>elasticsearch</h2>
+<pre><code class="language-bash">docker network create somenetwork
+docker run -d --name elasticsearch --net somenetwork -p 9200:9200 -p 9300:9300 -e &quot;discovery.type=single-node&quot; -e http.cors.enabled=true -e http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358 -e http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -e http.cors.allow-credentials=true elasticsearch:7.17.0
+
+docker network create somenetwork
+docker run -d --name elasticsearch2 --net somenetwork -p 9201:9200 -p 9301:9300 -e &quot;discovery.type=single-node&quot; -e http.cors.enabled=true -e http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358 -e http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -e http.cors.allow-credentials=true elasticsearch:7.17.0
+
+
+
+docker run -d --name kibana  -p 5601:5601 -m 512m --memory-swap=1024m  kibana:7.17.0
+
+docker exec -it kibana bash 
+cat /opt/kibana/config/kibana.yml 
+vi /opt/kibana/config/kibana.yml 
+// 修改配置，修改server.host和elasticsearch.hosts
+ // 192.168.0.187:9200，注意需要写宿主机的地址
+ server.host: &quot;0&quot; -&gt; server.host: &quot;0.0.0.0&quot; 
+elasticsearch.hosts: [ &quot;http://elasticsearch:9200&quot; ] -&gt;   elasticsearch.hosts: [ &quot;http://192.168.0.187:9200&quot; ]
+ // 重启容器 docker restart kibana
+</code></pre>
+<h2><a id="osgeogdal" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>osgeo/gdal</h2>
+<pre><code class="language-bash">docker run -p 7878:8080 -v /home:/home --name gdal -d -t osgeo/gdal:alpine-normal-latest
+
+
+docker run -v /home:/home --privileged=true --name drone_mq_py -d -t osgeo/gdal:alpine-normal-latest
+
+docker run -v /mnt:/mnt -p 7878:8080 --privileged=true --name gdal_tiles -d -t osgeo/gdal:alpine-normal-latest
+
+
+docker run --name gdal -d -t osgeo/gdal:alpine-normal-3.0.2
+
+
+docker run -p 7879:8080 -p 8082:8082 -v /home:/home --privileged=true --name drone_mq_py85 -d -t osgeo/gdal:alpine-normal-latest
+##                                       
+
+
+docker run -p 7222:8080 -v /opt/temp:/mnt/ --name drone_py -d -t drone_py:1.0
+docker build -t drone_py:1.0 .
+</code></pre>
+<h2><a id="kibana" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>kibana</h2>
+<pre><code class="language-bash">docker network create somenetwork
+docker run -d --name kibana --net somenetwork -p 5601:5601 kibana:7.17.0
+</code></pre>
+<h2><a id="rabbitmq" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>rabbitmq</h2>
+<pre><code class="language-bash">docker pull rabbitmq:3.9.12-management
+
+#方式一：默认guest 用户，密码也是 guest 
+
+docker run -d --hostname rabbit --name rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3.9.12-management
+
+
+docker run -d --hostname my-rabbit --name rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3.9.12-management
+docker run -d --hostname my-rabbit --name rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3.9.12-management
+
+docker run -d --hostname my-rabbit --name rabbit2 -p 15673:15672 -p 5673:5672 rabbitmq:3.9.12-management
+
+
+#方式二：设置用户名和密码 
+docker run -d --hostname my-rabbit --name rabbit -e RABBITMQ_DEFAULT_USER=mqjz -e RABBITMQ_DEFAULT_PASS=mq#jz@123.com -p 15672:15672 -p 5672:5672 rabbitmq:3.9.12-management
+</code></pre>
+<h2><a id="mongodb" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>mongodb</h2>
+<pre><code class="language-bash">docker pull mongo:5.0
+docker run --name some-mongo -p 27018:27017 -v /opt/mongo/datadir:/data/db -d mongo:5.0
+docker run -idt  --name mongo --privileged=true -p 27017:27017  -v /home/mongo/datadir:/data/db  -v /home/mongo/conf:/data/configdb  mongo:5.0 --auth
+
+docker run -idt  --name mongo --privileged=true -p 27017:27017  -v /mnt/mongo/datadir:/data/db  -v /mnt/mongo/conf:/data/configdb  mongo:5.0 --auth
+
+mongo admin
+
+&gt; use admin //选择admin数据库
+
+&gt; db.createUser({user: 'admin', pwd: '123.com', roles: [{role: &quot;root&quot;, db: &quot;admin&quot; }]}); //创建账号
+
+&gt;  db.auth('admin', '123.com') //账号
+
+
+db.changeUserPassword('admin','mong#jzpt@123.com')
+db.auth('admin', 'mong#jzpt@123.com')
+
+
+
+mongodump -h 127.0.0.1:27017  -u admin -p 123.com --authenticationDatabase drone -o /mnt 
+
+备份
+mongodump -h localhost --port 27017 --authenticationDatabase admin -u admin -p 123.com -d drone -o /mnt
+
+恢复
+mongorestore -h localhost --port 27017 --authenticationDatabase admin -u admin -p 123.com -d drone  /mnt
+</code></pre>
+<h2><a id="qgis" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>QGIS</h2>
+<pre><code class="language-bash">docker pull qgis/qgis
+
+docker run --privileged=true --name qgis -d -t docker.io/qgis/qgis:latest
+</code></pre>
+<h2><a id="lanproxy" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>lanproxy</h2>
+<p><a href="https://github.com/frank-lam/lanproxy-nat">https://github.com/frank-lam/lanproxy-nat</a></p>
+<h3><a id="server" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>server</h3>
+<pre><code class="language-plain_text">docker run -d \
+           --name lanproxy-server \
+           -p 8090:8090 \
+           -p 4900:4900 \
+           -p 4993:4993 \
+           -p 9000-9100:9000-9100 \
+           --restart=always \
+           -e LANPROXY_USERNAME=&quot;geofoundProxyAdmin&quot; \
+           -e LANPROXY_PASSWORD=&quot;geo@proxy#123.com&quot; \
+           franklin5/lanproxy-server
+</code></pre>
+<h3><a id="client" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>client</h3>
+<pre><code class="language-plain_text">docker run -d \
+           --name lanproxy-client \
+           -e LANPROXY_KEY=&quot;a6602477e0004bd2a40ff5e95dbf75d8&quot; \
+           -e LANPROXY_HOST=&quot;39.106.68.85&quot; \
+           --restart=always \
+           franklin5/lanproxy-client
+</code></pre>
+<p>使用 docker 直接运行容器和在宿主机上运行时有所不同。在 docker 服务启动后，docker 会为宿主机和容器各自分配一个 docker 网卡，而宿主机上会分配默认的 IP 地址，即：172.17.0.1，故容器中可以 ping 通宿主机上 172.17.0.1 的任何 TCP 端口。</p>
+<p>所以我们在后面的后台网页上的端口配置，不再是 172.0.0.1，必须是 172.17.0.1:port。</p>
+<h2><a id="python" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>python</h2>
+<pre><code class="language-plain_text">docker run --privileged=true -p 8020:8020 -p 8021:8021 -p 8022:8022 -v /data/tcp_server:/data/tcp_server --name tcp_server -d -t python:3.7
+
+screen -S mysession
+python tcp_s.py
+screen -S mysession1
+python http_s.py
+
+docker run --privileged=true -p 8023:8023 -p 8024:8024 -v /data/tcp_server1:/data/tcp_server1 --name tcp_server1 -d -t python:3.7
+</code></pre>
+<h2><a id="geoserver" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>geoserver</h2>
+<h3><a id="arm" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>arm</h3>
+<p>docker pull tomcat:8-jdk8-corretto</p>
+<h2><a id="neo4j" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>neo4j</h2>
+<pre><code class="language-plain_text">docker pull neo4j:5.13.0-community
+
+
+docker run -d --name container_name \  //-d表示容器后台运行 --name指定容器名字
+	-p 7474:7474 -p 7687:7687 \  //映射容器的端口号到宿主机的端口号
+	-v /home/neo4j/data:/data \  //把容器内的数据目录挂载到宿主机的对应目录下
+	-v /home/neo4j/logs:/logs \  //挂载日志目录
+	-v /home/neo4j/conf:/var/lib/neo4j/conf   //挂载配置目录
+	-v /home/neo4j/import:/var/lib/neo4j/import \  //挂载数据导入目录
+	--env NEO4J_AUTH=neo4j/password \  //设定数据库的名字的访问密码
+	neo4j //指定使用的镜像
+
+
+docker run -d --name neo4j -p 7474:7474 -p 7687:7687 -v /home/neo4j/data:/data -v /home/neo4j/logs:/logs -v /home/neo4j/conf:/var/lib/neo4j/conf -v /home/neo4j/import:/var/lib/neo4j/import --env NEO4J_AUTH=neo4j/moon#db@.com neo4j:5.13.0-community
+
+
+// 进入容器配置目录挂载在宿主机的对应目录，我这里是/home/neo4j/conf
+cd /home/neo4j/conf
+
+// vim编辑器打开neo4j.conf
+vim neo4j.conf
+
+// 进行以下更改
+//在文件配置末尾添加这一行
+dbms.connectors.default_listen_address=0.0.0.0  //指定连接器的默认监听ip为0.0.0.0，即允许任何ip连接到数据库
+
+//修改
+dbms.connector.bolt.listen_address=0.0.0.0:7687  //取消注释并把对bolt请求的监听“地址:端口”改为“0.0.0.0:7687”
+dbms.connector.http.listen_address=0.0.0.0:7474  //取消注释并把对http请求的监听“地址:端口”改为“0.0.0.0:7474”
+
+</code></pre>
+<h3><a id="win%E5%A4%87%E4%BB%BD%E8%BF%81%E7%A7%BB" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>WIN备份迁移</h3>
+<p>在neo4j安装目录的找到bin去执行，先停止服务</p>
+<h4><a id="%E5%AF%BC%E5%87%BA%EF%BC%88%E9%9C%80%E8%A6%81%E5%81%9C%E6%AD%A2%E6%9C%8D%E5%8A%A1%EF%BC%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>导出（需要停止服务）</h4>
+<pre><code class="language-plain_text">「--to-path是目录路径，不是文件路径」
+neo4j-admin database dump --to-path=E:\yss\temp\neo4jback neo4j
+
+输出错误信息「--verbose」
+neo4j-admin database dump --verbose --to-path=E:\yss\temp\neo4jback neo4j
+</code></pre>
+<h4><a id="%E5%AF%BC%E5%85%A5%EF%BC%88%E9%9C%80%E8%A6%81%E5%81%9C%E6%AD%A2%E6%9C%8D%E5%8A%A1%EF%BC%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>导入（需要停止服务）</h4>
+<pre><code class="language-plain_text">「--from-path是目录路径，不是文件路径」
+neo4j-admin database load --from-path=/mnt/loaddump neo4j
+
+输出错误信息
+neo4j-admin database load --verbose --from-path=/mnt/loaddump neo4j
+</code></pre>
+<h3><a id="docker%E5%A4%87%E4%BB%BD%E8%BF%81%E7%A7%BB" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Docker备份迁移</h3>
+<p>「原理是通过docker同一个容器版本，在启动的时候读取data目录，然后去执行导入或者导出」</p>
+<p>1、由于docker环境下的特殊性并且dump需要在neo4j停止的情况下才能进行，但neo4j进程停止后，docker容器会退出</p>
+<p>2、dump文件准备，并停止neo4j服务容器<br />
+准备好要导入的dump文件，然后记录在某个文件夹的目录</p>
+<p>3、临时容器准备<br />
+注意将dump文件放在/home/neo4j/data的子目录下</p>
+<pre><code class="language-plain_text">docker run --rm -v /home/neo4j/data:/data -it neo4j:5.13.0-community /bin/bash
+</code></pre>
+<p>4、进入临时容器<br />
+在临时容器中，并没有neo4j进程，所以可以正常进行dump</p>
+<pre><code class="language-plain_text">neo4j-admin database load --verbose --from-path=/var/lib/neo4j/data neo4j
+</code></pre>
+<p>5、重启neo4j服务</p>
+<pre><code class="language-plain_text">docker run -d --name neo4j -p 7474:7474 -p 7687:7687 -v /home/neo4j/data:/data -v /home/neo4j/logs:/logs -v /home/neo4j/conf:/var/lib/neo4j/conf -v /home/neo4j/import:/var/lib/neo4j/import --env NEO4J_AUTH=neo4j/moon#db@.com neo4j:5.13.0-community
+</code></pre>
+<p><a href="https://hub.docker.com/_/neo4j/tags?page=1&amp;name=5.13">https://hub.docker.com/_/neo4j/tags?page=1&amp;name=5.13</a></p>
+<h2><a id="jar%E8%BF%90%E8%A1%8C" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>jar运行</h2>
+<h3><a id="%E9%80%9A%E8%BF%87jdk8%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6%E7%9B%B4%E6%8E%A5%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%BF%90%E8%A1%8C" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>通过jdk8容器运行时直接命令执行运行</h3>
+<pre><code class="language-plain_text">docker run -d --name moon \
+-p 4000:8080 \
+-v /home/moon:/mnt/server \
+openjdk:8 java -jar /mnt/server/ruoyi-admin.jar \
+--spring.config.location=file:/mnt/server/application.yml,file:/mnt/server/application-druid.yml \
+--logging.config=file:/mnt/server/logback.xml
+
+
+</code></pre>
+<p>docker run -d <br />
+--restart=always <br />
+-v /moon/loy/jar:/jar<br />
+-v /server/logs/demo:/mnt/logs/demo <br />
+-p 7778:7778 <br />
+--name demo <br />
+jdk8 /usr/bin/java -jar <br />
+-Duser.timezone=GMT+08 <br />
+/jar/demo-1.0.jar</p>
+
+		</p>
+		<!-- 侧边导航条 -->
+		<div id="directory-content" class="directory-content">
+    		<div id="directory" style="margin-left: 50px;margin-top: 120px"></div>
+		</div>
+	<!-- JS -->
+	<script>
+		var postDirectoryBuild = function() {
+		    var postChildren = function children(childNodes, reg) {
+		        var result = [],
+		            isReg = typeof reg === 'object',
+		            isStr = typeof reg === 'string',
+		            node, i, len;
+		        for (i = 0, len = childNodes.length; i < len; i++) {
+		            node = childNodes[i];
+		            if ((node.nodeType === 1 || node.nodeType === 9) &&
+		                (!reg ||
+		                isReg && reg.test(node.tagName.toLowerCase()) ||
+		                isStr && node.tagName.toLowerCase() === reg)) {
+		                result.push(node);
+		            }
+		        }
+		        return result;
+		    },
+		    createPostDirectory = function(article, directory, isDirNum) {
+		        var contentArr = [],
+		            titleId = [],
+		            levelArr, root, level,
+		            currentList, list, li, link, i, len;
+		        levelArr = (function(article, contentArr, titleId) {
+		            var titleElem = postChildren(article.childNodes, /^h\d$/),
+		                levelArr = [],
+		                lastNum = 1,
+		                lastRevNum = 1,
+		                count = 0,
+		                guid = 1,
+		                id = 'directory' + (Math.random() + '').replace(/\D/, ''),
+		                lastRevNum, num, elem;
+		            while (titleElem.length) {
+		                elem = titleElem.shift();
+		                contentArr.push(elem.innerHTML);
+		                num = +elem.tagName.match(/\d/)[0];
+		                if (num > lastNum) {
+		                    levelArr.push(1);
+		                    lastRevNum += 1;
+		                } else if (num === lastRevNum ||
+		                    num > lastRevNum && num <= lastNum) {
+		                    levelArr.push(0);
+		                    lastRevNum = lastRevNum;
+		                } else if (num < lastRevNum) {
+		                    levelArr.push(num - lastRevNum);
+		                    lastRevNum = num;
+		                }
+		                count += levelArr[levelArr.length - 1];
+		                lastNum = num;
+		                elem.id = elem.id || (id + guid++);
+		                titleId.push(elem.id);
+		            }
+		            if (count !== 0 && levelArr[0] === 1) levelArr[0] = 0;
+
+		            return levelArr;
+		        })(article, contentArr, titleId);
+		        currentList = root = document.createElement('ul');
+		        dirNum = [0];
+		        for (i = 0, len = levelArr.length; i < len; i++) {
+		            level = levelArr[i];
+		            if (level === 1) {
+		                list = document.createElement('ul');
+		                if (!currentList.lastElementChild) {
+		                    currentList.appendChild(document.createElement('li'));
+		                }
+		                currentList.lastElementChild.appendChild(list);
+		                currentList = list;
+		                dirNum.push(0);
+		            } else if (level < 0) {
+		                level *= 2;
+		                while (level++) {
+		                    if (level % 2) dirNum.pop();
+		                    currentList = currentList.parentNode;
+		                }
+		            }
+		            dirNum[dirNum.length - 1]++;
+		            li = document.createElement('li');
+		            link = document.createElement('a');
+		            link.href = '#' + titleId[i];
+		            link.innerHTML = !isDirNum ? contentArr[i] :
+		                dirNum.join('.') + ' ' + contentArr[i] ;
+		            li.appendChild(link);
+		            currentList.appendChild(li);
+		        }
+		        directory.appendChild(root);
+		    };
+		    createPostDirectory(document.getElementById('post-content'),document.getElementById('directory'), true);
+		};
+		postDirectoryBuild();
+	</script>	
+	<!-- 版权声明 -->
+		<p class="post-info" style="color: #BCBDB6">
+				本文由 <a style="color: #BCBDB6" href="#">yssenn
+				</a> 创作，采用 <a style="color: #BCBDB6" href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="external nofollow">知识共享署名4.0</a> 国际许可协议进行许可<br>本站文章除注明转载/出处外，均为本站原创或翻译，转载前请务必署名<br>最后编辑时间为: 2023-05-04T15:17:35+08:00
+		</p>
+	<!-- 导航 -->
+			<div id="comments" class="clearfix" style="padding: 0px;">
+				<footer class="post-footer clearfix">	    			
+				    <div class="meta">
+					    
+					    	
+					        <a href="16831868305223.html" 
+					        title="Next Post: Android">Android &raquo;</a>
+					    </p> 
+					    
+				    </div>
+			  	</footer>
+	<!-- footer end -->
+			</div>		
+	</div>
+</article>
+			<!-- 评论区 -->
+			<div id="respond-post-269" class="comment-container"> 
+				<div id="comments" class="clearfix">
+
+				<script type="text/javascript" src="/pm/hashover/hashover.js"></script>
+<noscript>You must have JavaScript enabled to use the comments.</noscript>
+
+<!-- 评论区结束 -->
+					<div>
+					
+					</div>
+
+				</div>
+			</div>
+</div>
+<!-- headroom -->
+<script type="text/javascript"> 
+(function() {
+    var header = new Headroom(document.querySelector("#header"), {
+        tolerance: 3,
+        offset : 80,
+        classes: {
+          initial: "animated",
+          pinned: "slideDown",
+          unpinned: "slideUp"
+        }
+    });
+    header.init();
+}());
+</script>  <footer id="footer" class="footer" style="background-color: #030501;color: #FFFFFE;">
+  <div class="footer-meta">
+    <div class="footer-container">
+      <!-- 版权说明 -->
+      <div class="meta-item meta-copyright">
+        <div class="meta-copyright-info">
+          <h2 class="meta-title">INFO</h2>
+          <div class="info-text">  
+              <p>Copyright &copy; 2017 <br>
+              <span class="credit">Powered by 
+              <a target="_blank" href="http://zh.mweb.im/">MWeb</a> 
+              </span>
+              <p>Theme Design by <a href="https://www.linpx.com/" target="_blank">Chakhsu</a></p>
+              <p>Migrating to Mweb by <a href="http://metaidea.cn">idken</a></p>
+              </p> 
+          </div>                  
+        </div>
+      </div>  
+      <!-- Categories -->
+      <div class="meta-item meta-comments">
+          <h2 class="meta-title">CATEGORIES</h2>  
+            
+            </p>
+            </li>
+            
+             
+      </div>
+      <!-- 最新文章 -->
+      <div class="meta-item meta-comments">
+          <h2 class="meta-title">RECENT POSTS</h2>
+
+          
+          
+         <li>
+           <a href="16831846551786.html">Docker</a><br>
+         </li>
+          
+          
+          
+         <li>
+           <a href="16831868305223.html">Android</a><br>
+         </li>
+          
+          
+          
+         <li>
+           <a href="16831904029017.html">ArcGIS JS API</a><br>
+         </li>
+          
+          
+          
+         <li>
+           <a href="16844290340935.html">Cesium</a><br>
+         </li>
+          
+          
+          
+         <li>
+           <a href="16854252048029.html">Color颜色生成器</a><br>
+         </li>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+           
+
+      </div>
+  </div>
+</div>
+</footer>
+
+<!--评论变量判断 -->
+      
+<!-- 评论end -->
+
+
+
+</body>
+</html>
